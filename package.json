@@ -1,0 +1,23 @@
+{
+  "name": "LMS",
+  "version": "0.1.0",
+  "description": "CS602 Learning Management System term project",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yurm04/LMS.git"
+  },
+  "author": "Yuraima Estevez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yurm04/LMS/issues"
+  },
+  "homepage": "https://github.com/yurm04/LMS",
+  "dependencies": {
+    "express": "^4.13.3",
+    "mongoose": "^4.1.7"
+  }
+}
