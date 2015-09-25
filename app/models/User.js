@@ -11,7 +11,7 @@ var userSchema = new mongoose.Schema( {
 });
 
 // User model methods
-userSchema.methods.updateToken = function() {
+userSchema.methods.updateToken = function(callback) {
 
 };
 
@@ -20,9 +20,54 @@ userSchema.methods.checkToken = function() {
 
 };
 
+userSchema.methods.setData = function(data, callback) {
+  // check for existing user
+  var user = this;
+  user.userExists(data.email, function (err, userExists) {
+    if (err)
+      return callback(err);
+
+    if (userExists)
+      return callback('User email already exists');
+
+    user.email = data.email;
+  });
+
+  // ENCRYPT FIRST!!!
+  user.password = data.password;
+  user.role = data.role;
+  // set token
+  user.updateToken( function(err, status) {
+    if (err)
+      callback(err);
+
+    if (status)
+      ;
+  });
+
+};
+
+userSchema.methods.userExists = function(userEmail, callback) {
+  // still don't know
+  var UserModel = mongoose.model('User', userSchema);
+
+  UserModel.findOne( { email : userEmail }, function (err, foundUser) {
+    if (err)
+      return callback(err);
+
+    if (foundUser)
+      return callback (null, true);
+
+    // no user exists, proceed
+    callback(null, false);
+
+  });
+};
+
 userSchema.methods.createUser = function(user, callback) {
   // why the hell is this necessary?
   var UserModel = mongoose.model('User', userSchema);
+  var newUser = this;
 
   // search for existing user, error if one found
   UserModel.findOne( { email : user.email }, function(err, foundUser) {
@@ -35,12 +80,12 @@ userSchema.methods.createUser = function(user, callback) {
       return callback('User with email already exists');
 
     // set fields
-    this.email = user.email;
-    this.password = user.password;
+    newUser.email = user.email;
+    newUser.password = user.password;
 
     // attempt to save
     console.log('before saving newUser ' + this);
-    this.save( function(err, saved) {
+    newUser.save( function(err, saved) {
       console.log('saved newUser ' + saved);
       if(err)
         return callback('Could not save user');
