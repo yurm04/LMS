@@ -98,7 +98,21 @@ userSchema.methods.createUser = function(user, callback) {
 };
 
 // before save validate and make other checks
-userSchema.pre('save', function() {
+userSchema.pre('save', function(next) {
+  // check if user exists
+  this.userExists(this.email, function(err, userExists) {
+    // if error occurred, return
+    if (err)
+      return next(err);
+    // if user exists, return
+    if (userExists)
+      return next('User email already exists');
+
+    // TODO - NO ERROR, hash password
+
+    // all good, return with new user data
+    next();
+  });
 
 });
 

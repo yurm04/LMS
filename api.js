@@ -38,21 +38,34 @@ router.route('/user')
   
   // create new user
   .post( function(req, res) {
-    var newUser = new User();
-    
-    // attempt to create new user with
-    newUser.createUser(req.body.reqUser, function(err, user) {
-      // error occurred, respond negatively
-      if (err)
-        res.json( {
-          type: false,
-          data: err
-        });
+    var data = req.body.reqUser;
+    // check to make sure all required values are set
+    if ( !data.email || !data.password || !data.role ) {
+      // return error if data missing
+      res.json({
+        type : false,
+        data : 'Missing required user data'
+      });
+    }
 
-      // good news everyone!
-      res.json( {
+    // set user data
+    var newUser = new User();
+    newUser.email = data.email;
+    newUser.password = data.password;
+    newUser.role = data.role;
+
+    newUser.save( function(err) {
+      // if error send word
+      if (err)
+        res.json({
+          type : false,
+          data : err
+        });
+      
+      // "Good news, Everyone!" - Professor Farnsworth
+      res.json({
         type : true,
-        data : user
+        data : newUser
       });
     });
 
