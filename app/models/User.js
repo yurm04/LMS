@@ -1,12 +1,13 @@
 // user.js ============================
 
-var mongoose = require('mongoose');
+var mongoose = require('mongoose'),
+    bcrypt = require('bcrypt-nodejs');    // for hashing passwords
 
-// User schema
+// User schema ========================
 var userSchema = new mongoose.Schema( {
-  email : String,
-  password : String, // should hash
-  role : String,     // should this be an ID to roles table?
+  email : { type : String, unique : true, required : true},
+  password : { type : String, required : true }, // should hash
+  role : { type : String, unique : true, required : true },     // should this be an ID to roles table?
   token : String     // what would this actually be?
 });
 
@@ -17,33 +18,6 @@ userSchema.methods.updateToken = function(callback) {
 
 // check for valid token 
 userSchema.methods.checkToken = function() {
-
-};
-
-userSchema.methods.setData = function(data, callback) {
-  // check for existing user
-  var user = this;
-  user.userExists(data.email, function (err, userExists) {
-    if (err)
-      return callback(err);
-
-    if (userExists)
-      return callback('User email already exists');
-
-    user.email = data.email;
-  });
-
-  // ENCRYPT FIRST!!!
-  user.password = data.password;
-  user.role = data.role;
-  // set token
-  user.updateToken( function(err, status) {
-    if (err)
-      callback(err);
-
-    if (status)
-      ;
-  });
 
 };
 
@@ -64,54 +38,31 @@ userSchema.methods.userExists = function(userEmail, callback) {
   });
 };
 
-userSchema.methods.createUser = function(user, callback) {
-  // why the hell is this necessary?
-  var UserModel = mongoose.model('User', userSchema);
-  var newUser = this;
-
-  // search for existing user, error if one found
-  UserModel.findOne( { email : user.email }, function(err, foundUser) {
-    // some error
-    if(err)
-      return callback('An error Occurred');
-
-    // user exists, callback with error
-    if (foundUser)
-      return callback('User with email already exists');
-
-    // set fields
-    newUser.email = user.email;
-    newUser.password = user.password;
-
-    // attempt to save
-    console.log('before saving newUser ' + this);
-    newUser.save( function(err, saved) {
-      console.log('saved newUser ' + saved);
-      if(err)
-        return callback('Could not save user');
-
-      // all clear, user created
-      callback(null, saved);
-    });
-  });
-
-};
-
 // before save validate and make other checks
-userSchema.pre('save', function(next) {
+userSchema.pre('save', function(next, done) {
   // check if user exists
-  this.userExists(this.email, function(err, userExists) {
+  var user = this;
+  user.userExists(this.email, function(err, userExists) {
     // if error occurred, return
     if (err)
-      return next(err);
+      return done(err);
     // if user exists, return
     if (userExists)
-      return next('User email already exists');
+      return done('User email already exists');
 
-    // TODO - NO ERROR, hash password
+    // NO ERROR, generate salt
+    bcrypt.genSalt(5, function(err, salt) {
+      if (err)
+        done(err);
 
-    // all good, return with new user data
-    next();
+      // hash password and set
+      bcrypt.hash(user.password, salt, null, function(err, hash) {
+        user.password = hash;
+        // all good, user saved
+        next();
+      })
+    });
+    
   });
 
 });

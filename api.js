@@ -57,10 +57,7 @@ router.route('/user')
     newUser.save( function(err) {
       // if error send word
       if (err)
-        res.json({
-          type : false,
-          data : err
-        });
+        return res.json( { type : false, data : err });
       
       // "Good news, Everyone!" - Professor Farnsworth
       res.json({
