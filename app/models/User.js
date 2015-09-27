@@ -7,7 +7,7 @@ var mongoose = require('mongoose'),
 var userSchema = new mongoose.Schema( {
   email : { type : String, unique : true, required : true},
   password : { type : String, required : true }, // should hash
-  role : { type : String, unique : true, required : true },     // should this be an ID to roles table?
+  role : { type : String, required : true },
   token : String     // what would this actually be?
 });
 

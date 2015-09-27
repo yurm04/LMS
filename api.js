@@ -1,11 +1,12 @@
 // api.js =======================================
-var express = require('express'),
-    router  = express.Router(),
-    bodyParser  = require('body-parser'),
-    mongoose = require('mongoose'),
-    dbconfig  = require('./config/config').db;
+var express        = require('express'),
+    router         = express.Router(),
+    bodyParser     = require('body-parser'),
+    mongoose       = require('mongoose'),
+    dbconfig       = require('./config/config').db,
+    User           = require('./app/models/User'),
+    userController = require('./app/controllers/user');
 
-    User = require('./app/models/User');
 // connect to DB
 mongoose.connect(dbconfig.url);
 
@@ -33,45 +34,13 @@ router.route('/login', function(req, res) {
 
 // user routes ==================================
 router.route('/user')
-  // get all users
-  .get()
-  
-  // create new user
-  .post( function(req, res) {
-    var data = req.body.reqUser;
-    // check to make sure all required values are set
-    if ( !data.email || !data.password || !data.role ) {
-      // return error if data missing
-      res.json({
-        type : false,
-        data : 'Missing required user data'
-      });
-    }
-
-    // set user data
-    var newUser = new User();
-    newUser.email = data.email;
-    newUser.password = data.password;
-    newUser.role = data.role;
-
-    newUser.save( function(err) {
-      // if error send word
-      if (err)
-        return res.json( { type : false, data : err });
+  .get( userController.getUsers )           // get all users
+  .post( userController.postUser );         // create new user
       
-      // "Good news, Everyone!" - Professor Farnsworth
-      res.json({
-        type : true,
-        data : newUser
-      });
-    });
-
-  });
-
-router.route('/user/:id')
-  .get()
-  .put()
-  .delete();
+router.route('/user/:id')     
+  .get( userController.getUser )           // gets user of ID :id
+  .put( userController.putUser )            // updates user of ID :id
+  .delete( userController.deleteUser );     // delete user of ID :id
 
 
 
