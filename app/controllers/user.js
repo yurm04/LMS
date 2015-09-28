@@ -18,13 +18,13 @@ var setUpdateData = function(user, data, callback) {
   if (data.password && data.password !== undefined){
     user.hashPassword( function(err, hash) {
       if (err)
-        callback(err)
+        callback(err);
 
       newData.password = hash;
       callback(null, newData);
     });
   }
-  callback(null, newData);
+  // callback(null, newData);
 };
 
 // check for all required information
