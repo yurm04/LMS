@@ -7,18 +7,28 @@ var mongoose = require('mongoose'),
 var userSchema = new mongoose.Schema( {
   email : { type : String, unique : true, required : true},
   password : { type : String, required : true }, // should hash
+  firstname : { type : String, required : true },
+  lastname : { type : String, required : true },
   role : { type : String, required : true },
   token : String     // what would this actually be?
 });
 
-// User model methods
-userSchema.methods.updateToken = function(callback) {
+// user model methods =================
 
-};
+// hash password
+userSchema.methods.hashPassword = function(callback) {
+  var user = this;
+  bcrypt.genSalt(5, function(err, salt) {
+    if (err)
+      return callback(err);
 
-// check for valid token 
-userSchema.methods.checkToken = function() {
-
+    // hash password and set
+    bcrypt.hash(user.password, salt, null, function(err, hash) {
+      user.password = hash;
+      // all good, user saved
+      callback(null, hash);
+    })
+  });
 };
 
 userSchema.methods.userExists = function(userEmail, callback) {
@@ -38,31 +48,20 @@ userSchema.methods.userExists = function(userEmail, callback) {
   });
 };
 
-// before save validate and make other checks
+// before save hash password if it's been modified
 userSchema.pre('save', function(next, done) {
-  // check if user exists
   var user = this;
-  user.userExists(this.email, function(err, userExists) {
-    // if error occurred, return
+
+  // if password hasn't been modified, return callback
+  if (!user.isModified('password'))
+    next();
+
+  // NO ERROR, generate salt
+  user.hashPassword( function(err) {
     if (err)
-      return done(err);
-    // if user exists, return
-    if (userExists)
-      return done('User email already exists');
+      done(err);
 
-    // NO ERROR, generate salt
-    bcrypt.genSalt(5, function(err, salt) {
-      if (err)
-        done(err);
-
-      // hash password and set
-      bcrypt.hash(user.password, salt, null, function(err, hash) {
-        user.password = hash;
-        // all good, user saved
-        next();
-      })
-    });
-    
+    next()
   });
 
 });

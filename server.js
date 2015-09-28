@@ -8,8 +8,3 @@ app.use('/api', api);
 app.listen(3000, function() {
   console.log('Connected to server...');
 });
-
-/*
-  using passport-http-bearer for authentication.  Sample project followed:
-  https://github.com/passport/express-4.x-http-bearer-example
-*/
