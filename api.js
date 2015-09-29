@@ -5,7 +5,8 @@ var express        = require('express'),
     mongoose       = require('mongoose'),
     dbconfig       = require('./config/config').db,
     User           = require('./app/models/User'),
-    userController = require('./app/controllers/user');
+    userController = require('./app/controllers/user'),
+    courseController = require('./app/controllers/course');
 
 // connect to DB
 mongoose.connect(dbconfig.url);
@@ -37,12 +38,20 @@ router.route('/user')
   .get( userController.getUsers )           // get all users
   .post( userController.postUser );         // create new user
       
-router.route('/user/:id')     
-  .get( userController.getUser )           // gets user of ID :id
+router.route('/user/:id')
+  .get( userController.getUser )            // gets user of ID :id
   .put( userController.putUser )            // updates user of ID :id
   .delete( userController.deleteUser );     // delete user of ID :id
 
- 
+// course routes ================================
+ router.route('/course')
+  .get( courseController.getCourses )       // get all courses
+  .post( courseController.postCourse );     // create new course
+
+router.route('/course/:id')
+  .get( courseController.getCourse )            // gets course of ID :id
+  .put( courseController.putCourse )            // updates course of ID :id
+  .delete( courseController.deleteCourse );     // delete course of ID :id
 
 
 // DON'T FORGET TO EXPORT ROUTER YOU BUTT!
