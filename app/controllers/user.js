@@ -16,15 +16,20 @@ var setUpdateData = function(user, data, callback) {
   
   // if password is being set, make sure to hash it first
   if (data.password && data.password !== undefined){
-    user.hashPassword( function(err, hash) {
+
+    user.hashPassword( data.password, function(err, hash) {
       if (err)
-        callback(err);
+        return ( callback(err) );
 
       newData.password = hash;
-      callback(null, newData);
+      // execute callback at this point
+      return (callback(null, newData));
     });
+  } else {
+    // if password not being updated go ahead and callback
+    callback(null, newData);
   }
-  // callback(null, newData);
+  
 };
 
 // check for all required information
@@ -51,7 +56,7 @@ module.exports.getUser = function(req, res) {
     res.json( {
       type : true,
       data : user
-    })
+    });
 
   });
 };
@@ -62,7 +67,7 @@ module.exports.getUsers = function(req, res) {
     if (err)
       return res.json( { type : false, data : err });
 
-    if ( users === undefined || users.length == 0 )
+    if ( users === undefined || users.length === 0 )
       return res.json( { type : false, data : 'There are no users'});
 
     res.json({
@@ -123,63 +128,41 @@ module.exports.putUser = function(req, res) {
       return res.json( { type : false, data : 'User does not exist' });
 
     var data = req.body.user;
-    // setUpdateData(foundUser, data, function(err, newData) {
-    //   if (err)
-    //     return res.json( { type : false, data : err });
-    //   console.log('res.json headersSent ' + res.headersSent);
-    //   res.json({
-    //     type : true,
-    //     data : foundUser
-    //   })
-    // }); 
-    User.update( { "_id" : id }, { "email" : 'testingemail' }, function(err) {
-      if (err)
-        console.log('some error on update');
-        return res.json( { type : false, data : 'User does not exist' });
 
-      res.json({
-        type : true,
-        data : foundUser
-      })
-    });
-  });
-
-
-
-
-
-
-  /*
-    console.log('Before findOne ' + res.headersSent);
-  User.findOne({ "_id" : id }, function(err, foundUser) {
-    if (err)
-      return res.json( { type : false, data : err });
-
-    if (!foundUser)
-      return res.json( { type : false, data : 'User does not exist' });
-
-    console.log('Before setUpdateData ' + res.headersSent);
-    var data = req.body.user;
     setUpdateData(foundUser, data, function(err, newData) {
       if (err)
         return res.json( { type : false, data : err });
-      console.log('Before user update ' + res.headersSent);
-      User.update({ "_id" : id }, newData, function(err) {
+
+      User.update( { "_id" : id }, newData, function(err) {
         if (err)
           return res.json( { type : false, data : err });
 
-        console.log('Before res.json ' + res.headersSent);
-        res.json({
-          type : true
-        });
-      })
-    });
+        User.findById( id, function(err, updatedUser) {
+          if (err)
+            return res.json( { type : false, data : err });
 
+          res.json({
+            type : true,
+            data : updatedUser
+          });
+        });
+      });
+    });
   });
-   */
 };
 
 // DELETE /user/:id
 module.exports.deleteUser = function(req, res) {
+  var id = req.params.id;
+  if (!id || id === null || id === undefined )
+    return res.json( { type : false, data : 'Missing User ID' });
 
+  User.findOneAndRemove( { "_id" : id }, function(err) {
+    if (err)
+      return res.json( { type : false, data : err });
+
+    res.json({
+      type : true
+    });
+  });
 };

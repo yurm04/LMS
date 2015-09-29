@@ -16,18 +16,18 @@ var userSchema = new mongoose.Schema( {
 // user model methods =================
 
 // hash password
-userSchema.methods.hashPassword = function(callback) {
+userSchema.methods.hashPassword = function(pwd, callback) {
   var user = this;
   bcrypt.genSalt(5, function(err, salt) {
     if (err)
       return callback(err);
 
     // hash password and set
-    bcrypt.hash(user.password, salt, null, function(err, hash) {
+    bcrypt.hash(pwd, salt, null, function(err, hash) {
       user.password = hash;
       // all good, user saved
       callback(null, hash);
-    })
+    });
   });
 };
 
@@ -57,11 +57,11 @@ userSchema.pre('save', function(next, done) {
     next();
 
   // NO ERROR, generate salt
-  user.hashPassword( function(err) {
+  user.hashPassword( user.passowrd, function(err) {
     if (err)
       done(err);
 
-    next()
+    next();
   });
 
 });
