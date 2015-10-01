@@ -10,6 +10,15 @@ var isValid = function (data) {
   }
 };
 
+var setUpdateData = function (course, data, callback) {
+  var newData = {};
+  if (data.title && data.title !== undefined) {
+    newData.title = data.title;
+  }
+
+  return callback(null, newData);
+};
+
 // GET /course/:id - get course of ID :id
 module.exports.getCourse = function( req, res ) {
   var id = req.params.id;
@@ -71,12 +80,44 @@ module.exports.postCourse = function( req, res ) {
 
 // PUT /course/:id - update course data
 module.exports.putCourse = function( req, res ) {
-  var id = req.params.id;
-  Courses.findById(id, function(err, foundCourse) {
-    
+  var id = mongoose.Types.ObjectId(req.params.id);
+  var data = req.body.course;
+  Course.findById(id, function(err, foundCourse) {
+    if (err)
+      return res.json({ type : false, data : err });
+    if (!foundCourse)
+      return res.json({ type : false, data : 'Course does not exists' });
+
+    setUpdateData(foundCourse, data, function(err, newData) {
+      Course.update( {"_id" : id}, newData, function(err) {
+        if (err)
+          return res.json({ type : false, data : err });
+
+        Course.findById(id, function(err, updatedCourse) {
+          if (err)
+            return res.json({ type : false, data : err });
+
+          res.json({
+            type : true,
+            data : updatedCourse
+          });
+        });
+      });
+    });
   });
 };
 
 module.exports.deleteCourse = function( req, res ) {
+  var id = mongoose.Types.ObjectId(req.params.id);
+  if ( !id || id === null || id === undefined )
+    return res.json({ type : false, data : 'Missing course ID' });
 
+  Course.findOneAndRemove({ "_id" : id }, function(err) {
+    if (err)
+      return res.json({ type : false, data : err });
+    
+    res.json({
+      type : true
+    });
+  });
 };

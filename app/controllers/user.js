@@ -1,6 +1,9 @@
 // controller/user.js ==================
 var User = require('../models/User'),
-    mongoose = require('mongoose');
+    Course = require('../models/Course'),
+    UserCourse = require('../models/UserCourse'),
+    mongoose = require('mongoose'),
+    _ = require('underscore');
 
 var setUpdateData = function(user, data, callback) {
   var newData = {};
@@ -13,6 +16,10 @@ var setUpdateData = function(user, data, callback) {
 
   if (data.lastname && data.lastname !== undefined)
     newData.lastname = data.lastname;
+
+  if (data.role && data.role !== undefined) {
+    newData.role = data.role;
+  }
   
   // if password is being set, make sure to hash it first
   if (data.password && data.password !== undefined){
@@ -50,7 +57,7 @@ module.exports.getUser = function(req, res) {
       return res.json( { type : false, data : err });
 
     if (!user)
-      return res.json( { type : false, data : 'User does not exist'});
+      return res.json( { type : false, data : 'User not found'});
 
     // return user if no errors
     res.json( {
@@ -125,7 +132,7 @@ module.exports.putUser = function(req, res) {
       return res.json( { type : false, data : err });
 
     if (!foundUser)
-      return res.json( { type : false, data : 'User does not exist' });
+      return res.json( { type : false, data : 'User not found' });
 
     var data = req.body.user;
 
@@ -163,6 +170,95 @@ module.exports.deleteUser = function(req, res) {
 
     res.json({
       type : true
+    });
+  });
+};
+
+// GET /user/:id/course/ - return a list of courses for user
+module.exports.getCourses = function ( req, res ) {
+  var uid = mongoose.Types.ObjectId(req.params.id);
+
+  User.findById(uid, function(err, foundUser) {
+    if (err)
+      return res.json( { type : false, data : err });
+    if (!foundUser)
+      return res.json( { type : false, data : 'User not found' });
+
+    UserCourse.find( { "userId" : uid }, function(err, courses) {
+      if (err)
+        return res.json( { type : false, data : err });
+      if (courses === undefined || courses.length === 0)
+        return res.json( { type : false, data : 'No courses found' });
+      console.log(courses);
+      var courseIds = _.pluck(courses,'courseId');
+      Course.find({ '_id' : { $in : courseIds } }, function(err, foundCourses){
+        if (err)
+          return res.json({ type : false, data : err });
+        if (!foundCourses)
+          return res.json({ type : false, data : 'No courses found' });
+
+        res.json({
+          type : true,
+          data : foundCourses
+        });
+      });
+    });
+  });
+};
+
+// POST /user/:id/course/:cid - add a userCourse
+module.exports.postCourse = function( req, res ) {
+  var uid = req.params.id;
+
+  User.findById(uid, function(err, foundUser) {
+    if (err)
+      return res.json( { type : false, data : err });
+    if (!foundUser)
+      return res.json( { type : false, data : 'User not found' });
+
+    var cid = req.params.cid;
+
+    Course.findById(cid, function(err, foundCourse) {
+      if (err)
+        return res.json( { type : false, data : err });
+      if (!foundCourse)
+        return res.json( { type : false, data : 'Course not found' });
+
+      var userCourse = new UserCourse();
+      userCourse.userId = uid;
+      userCourse.courseId = cid;
+      userCourse.save( function(err) {
+        if (err)
+          return res.json( { type : false, data : err });
+
+        res.json({
+          type : true,
+          data : userCourse
+        });
+      });
+    });
+  });
+};
+
+// DELETE /user/:id/course/:cid
+module.exports.deleteCourse = function( req, res ) {
+  var uid = req.params.id;
+
+  User.findById(uid, function(err, foundUser) {
+    if (err)
+      return res.json({ type : false, data : err });
+
+    if (!foundUser)
+      return res.json({ type : false, data : 'User not found' });
+
+    var cid = req.params.cid;
+    Course.findOneAndRemove({ "course_id" : cid }, function(err, foundCourse) {
+      if (err)
+        return res.json({ type : false, data : err });
+
+      res.json({
+        type : true,
+      });
     });
   });
 };
