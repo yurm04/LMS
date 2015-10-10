@@ -252,7 +252,7 @@ module.exports.deleteCourse = function( req, res ) {
       return res.json({ type : false, data : 'User not found' });
 
     var cid = req.params.cid;
-    Course.findOneAndRemove({ "course_id" : cid }, function(err, foundCourse) {
+    Course.findOneAndRemove({ "course_id" : cid }, function(err) {
       if (err)
         return res.json({ type : false, data : err });
 
