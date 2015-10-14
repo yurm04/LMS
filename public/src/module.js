@@ -4,7 +4,7 @@ angular.module('LMSApp', ['ui.router'])
 // .constant()
 
 // config settings for router
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
     
   $urlRouterProvider.otherwise('/login');
 
@@ -17,11 +17,18 @@ angular.module('LMSApp', ['ui.router'])
           // requireLogin: false
       })
       
-      // overview state ==================
+      // overview state ===============
       .state('overview', {
           url: '/overview',
           templateUrl: 'src/login/overview.html'
           // requireLogin: true
+      })
+
+      // courses state ================
+      .state('courses', {
+        url: '/courses',
+        templateUrl: 'src/course/courses.html'
+        // requireLogin: true
       })
 
       // quiz state ===================
@@ -30,6 +37,7 @@ angular.module('LMSApp', ['ui.router'])
         templateUrl: 'src/quiz/quizes.html'
       })
 
+  $locationProvider.html5Mode(true);
       
 })
 
