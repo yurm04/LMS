@@ -15,14 +15,14 @@
         <td>{{course.department}}</td>
         <td>{{course.number}}</td>
         <td>{{course.title}}</td>
-        <td>{{course.instructor}}</td>
+        <td>{{course.instructorName}}</td>
       </tr>
       <tr>
         <td><input type="text" ng-model="newCourse.department"></td>
         <td><input type="text" ng-model="newCourse.number"></td>
         <td><input type="text" ng-model="newCourse.title"></td>
         <td>
-          <select ng-model="newCourse.instructor" ng-options="instructor.id as instructor.lastname for instructor in instructors">
+          <select ng-model="newCourse.instructor" ng-options="instructor._id as instructor.lastname for instructor in instructors">
           </select>
         </td>
       </tr>

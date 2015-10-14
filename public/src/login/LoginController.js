@@ -1,10 +1,20 @@
 angular.module('LMSApp')
-.controller('LoginController', function ($scope, $location ) {
+.controller('LoginController', ['$scope', '$state', 'userService', function ($scope, $state, userService ) {
   // email pattern regex
   $scope.emailPattern = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
 
   // initialize user object with empty values
   $scope.user = {};
+
+  $scope.login = function() {
+    userService.login($scope.user, function(data) {
+      // console.log(data);
+      if (data.type === true) {
+        userService.setUser = data.user;
+        $state.go('courses');
+      };
+    });
+  }
 
   // Validation -------------
   $scope.validate = function() {
@@ -40,6 +50,6 @@ angular.module('LMSApp')
   function sanitizeInput(val) {
     return true;
   }
-});
+}]);
 
 

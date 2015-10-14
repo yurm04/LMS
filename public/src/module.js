@@ -16,6 +16,12 @@ angular.module('LMSApp', ['ui.router'])
           templateUrl: 'src/login/login.html'
           // requireLogin: false
       })
+
+      // signup state =================
+      .state('signup', {
+        url: '/signup',
+        templateUrl: 'src/signup/signup.html'
+      })
       
       // overview state ===============
       .state('overview', {
@@ -35,6 +41,12 @@ angular.module('LMSApp', ['ui.router'])
       .state('quizes', {
         url: '/quizes',
         templateUrl: 'src/quiz/quizes.html'
+      })
+
+      // profile state ================
+      .state('profile', {
+        url : '/profile',
+        templateUrl: 'src/profile/profile.html'
       })
 
   $locationProvider.html5Mode(true);

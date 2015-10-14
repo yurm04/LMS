@@ -6,7 +6,9 @@ var express        = require('express'),
     dbconfig       = require('./config/config').db,
     User           = require('./app/models/User'),
     userController = require('./app/controllers/user'),
-    courseController = require('./app/controllers/course');
+    courseController = require('./app/controllers/course'),
+    loginController = require('./app/controllers/login'),
+    messageController = require('./app/controllers/message');
 
 // connect to DB
 mongoose.connect(dbconfig.url);
@@ -29,9 +31,8 @@ router.route('/')
 
 
 // login route ==================================
-router.route('/login', function(req, res) {
-  // do login stuff here
-});
+router.route('/login')
+  .post( userController.login );
 
 // USER ROUTES ==================================
 router.route('/user')
@@ -49,6 +50,9 @@ router.route('/user/:id/course/')               // gets list of courses for user
 router.route('/user/:id/course/:cid')
   .post( userController.postCourse )            // creates userCourse of user ID :id and course ID :cid
   .delete( userController.deleteCourse );       // deletes userCourse of user ID :id and course ID :cid
+
+router.route('/instructors')
+  .get( userController.getInstructors);         // Gets all instructors
   
 // COURSE ROUTES ================================
 router.route('/course')
@@ -59,6 +63,18 @@ router.route('/course/:id')
   .get( courseController.getCourse )            // gets course of ID :id
   .put( courseController.putCourse )            // updates course of ID :id
   .delete( courseController.deleteCourse );     // delete course of ID :id
+
+router.route('/course/:id/students')
+  .get( courseController.getStudents );         // gets students for the course of ID :id
+
+// MESSAGES ROUTES ==============================
+router.route('/messages/:id')
+  .get( messageController.getMessages);
+
+router.route('/messages')
+  .get( messageController.getMessages)
+  .post( messageController.postMessage );
+
 
 
 // DON'T FORGET TO EXPORT ROUTER YOU BUTT!

@@ -4,7 +4,7 @@ angular.module('LMSApp')
 // factory service to communicate with the courses API and retreive data
 .factory('courseService', ['$http', function($http) {
   // base url for API endpoint
-  var baseUrl = 'http://127.0.0.1:3000/api/course'
+  var baseUrl = 'http://127.0.0.1:3000/api/course';
 
   // fetch courses and callbacks ================
   var getAllCourses = function(cb) {
@@ -21,7 +21,6 @@ angular.module('LMSApp')
       }
     );
   };
-
 
   return {
     fetch : getAllCourses

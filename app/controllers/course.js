@@ -1,5 +1,7 @@
 // course.js ====================================
 var Course = require('../models/Course'),
+    UserCourse = require('../models/UserCourse'),
+    User = require('../models/User'),
     mongoose = require('mongoose');
 
 var isValid = function (data) {
@@ -25,8 +27,8 @@ var setUpdateData = function (course, data, callback) {
     newData.number = data.number;
   }
 
-  if (data.instructor && data.instructor !== undefined) {
-    newData.instructor = data.instructor;
+  if (data.instructorId && data.instructorId !== undefined) {
+    newData.instructorId = data.instructorId;
   }
 
   return callback(null, newData);
@@ -76,14 +78,14 @@ module.exports.postCourse = function( req, res ) {
 
     if (foundCourse)
       return res.json({ type: false, data: 'Course already exists' });
-
+    console.log(data);
     var newCourse = new Course();
     newCourse.title = data.title;
     newCourse.department = data.department;
     newCourse.number = data.number;
 
-    if (data.instructor) {
-      newCourse.instructor = data.instructor;
+    if (data.instructorId) {
+      newCourse.instructorId = data.instructorId;
     };
 
     newCourse.save( function(err){
@@ -140,4 +142,43 @@ module.exports.deleteCourse = function( req, res ) {
       type : true
     });
   });
+};
+
+// GET /course/:id/students - returns array of all students for course :id
+module.exports.getStudents = function( req, res ) {
+  var id = mongoose.Types.ObjectId(req.params.id);
+  console.log(id);
+  if ( !id || id === null || id === undefined )
+    return res.json({ type : false, data : 'Missing course ID' });
+  
+  console.log(id);
+  // return userCourse.userId for any document with the specified courseId
+  UserCourse.find( { "courseId" : id }, "userId -_id", function(err, ids) {
+    console.log(ids);
+    if (err)
+      return res.json({ type : false, data : err });
+    if (ids.length === 0)
+      return res.json({ type : false, data : 'No Users found for this course' });
+
+    var userIds = ids.map(function(i) {
+      return mongoose.Types.ObjectId(i.userId);
+    });
+    console.log(userIds);
+    User.find( { "role" : "student" , "_id" :{ $in : userIds } }, function(err, students) {
+      if (err)
+        return res.json({ type : false, data : err });
+      if (students.length ===0)
+        return res.json({ type : false, data : 'No Users found' });
+
+      res.json({
+        type : true,
+        data : students
+      });
+    });
+  });
+};
+
+// GET /course/instructors - return array of instructors with their course data
+module.exports.getInstructors = function( req, res ) {
+
 };

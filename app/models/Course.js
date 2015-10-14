@@ -6,7 +6,7 @@ var courseSchema = new Schema({
   title : { type : String, required : true, unique : true },
   department : { type : String, required : true },
   number : { type : String, required : true },
-  instructor : { type : Schema.Types.ObjectId }
+  instructorId : { type : Schema.Types.ObjectId }
 });
 
 module.exports = mongoose.model('Course', courseSchema);

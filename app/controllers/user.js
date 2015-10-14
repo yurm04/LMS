@@ -3,6 +3,7 @@ var User = require('../models/User'),
     Course = require('../models/Course'),
     UserCourse = require('../models/UserCourse'),
     mongoose = require('mongoose'),
+    bcrypt = require('bcrypt-nodejs'),
     _ = require('underscore');
 
 var setUpdateData = function(user, data, callback) {
@@ -86,7 +87,7 @@ module.exports.getUsers = function(req, res) {
 
 // POST /user - create new user
 module.exports.postUser = function(req, res) {
-  var data = req.body.user;
+  var data = req.body.data;
   // check to make sure all required values are set
   if ( !isValid(data) )
     // return error if data missing
@@ -184,7 +185,7 @@ module.exports.getCourses = function ( req, res ) {
     if (!foundUser)
       return res.json( { type : false, data : 'User not found' });
 
-    UserCourse.find( { "userId" : uid }, function(err, courses) {
+    UserCourse.find( {}, function(err, courses) {
       if (err)
         return res.json( { type : false, data : err });
       if (courses === undefined || courses.length === 0)
@@ -242,7 +243,7 @@ module.exports.postCourse = function( req, res ) {
 
 // DELETE /user/:id/course/:cid
 module.exports.deleteCourse = function( req, res ) {
-  var uid = req.params.id;
+  var uid = mongoose.Types.ObjectId(req.params.id);
 
   User.findById(uid, function(err, foundUser) {
     if (err)
@@ -252,7 +253,7 @@ module.exports.deleteCourse = function( req, res ) {
       return res.json({ type : false, data : 'User not found' });
 
     var cid = req.params.cid;
-    Course.findOneAndRemove({ "course_id" : cid }, function(err) {
+    UserCourse.findOneAndRemove({ "courseId" : cid, "userId" : uid }, function(err) {
       if (err)
         return res.json({ type : false, data : err });
 
@@ -262,3 +263,45 @@ module.exports.deleteCourse = function( req, res ) {
     });
   });
 };
+
+// GET /instructors - returns array of all instructors
+module.exports.getInstructors = function( req, res ) {
+  User.find( { 'role' : 'instructor' }, 'firstname lastname', function(err, instructors) {
+    if (err)
+      return res.json({ type : false, data : err });
+    if (instructors === 0)
+      return res.json({ type : false, data : 'No Instructors found' });
+
+    res.json({
+      type : true,
+      data : instructors
+    });
+
+  });
+}
+
+module.exports.login = function( req, res) {
+  // console.log(req);
+  var data = req.body.data;
+  var invalid = 'Invalid email/password';
+
+  User.findOne( { 'email' : data.email }, function(err, user) {
+    if (err)
+      return res.json({ type : false, data : err });
+    if (!user)
+      return res.json({ type : false, data : invalid });
+    
+    bcrypt.compare(data.password, user.password, function(err, result) {
+      if (err)
+        return res.json({ type : false, data : err });
+      console.log(result);
+      // if (result === false)
+      //   return res.json({ type : false, data : invalid });
+
+      res.json({
+        type : true,
+        data : user
+      });
+    });
+  });
+}

@@ -1,0 +1,81 @@
+<div class="well well-lg col-md-8 center center-block">
+  <form name="signupForm" class="form-horizontal" ng-controller="SignupController" novalidate>
+    <fieldset>
+      <legend>Create User Sign Up</legend>
+      <div class="form-group" ng-class="{ 'has-error':signupForm.firstname.$invalid && signupForm.firstname.$dirty}">
+        <label for="firstname" class="control-label col-md-2">First Name:</label>
+        <div class="col-md-10">
+          <input
+          id="firstname" 
+          type="text" 
+          name="firstname" 
+          class="form-control input-lg" 
+          ng-model="newUser.firstname"
+          ng-required="true"
+          >
+        </div>
+      </div>
+      <div class="form-group" ng-class="{ 'has-error':signupForm.lastname.$invalid && signupForm.lastname.$dirty}">
+        <label for="lastname" class="control-label col-md-2">Last Name:</label>
+        <div class="col-md-10">
+          <input
+          id="lastname" 
+          type="text" 
+          name="lastname" 
+          class="form-control input-lg" 
+          ng-model="newUser.lastname"
+          ng-required="true"
+          >
+        </div>
+      </div>
+
+      <div class="form-group" ng-class="{ 'has-error':signupForm.role.$invalid && signupForm.role.$dirty}">
+        <label for="role" class="control-label col-md-2">Role: </label>
+        <div class="col-md-10">
+          <select id="role" name="role" class="form-control input-lg" ng-model="newUser.role" ng-options="role for role in roles" ng-required="true">
+          </select>
+          
+          
+        </div>
+      </div>
+
+      <div class="form-group" ng-class="{ 'has-error':signupForm.email.$invalid && signupForm.email.$dirty}">
+        <label for="email" class="control-label col-md-2">Email</label>
+        <div class="col-md-10">
+          <input
+          id="email" 
+          type="email" 
+          name="email" 
+          class="form-control input-lg" 
+          placeholder="you@email.com"
+          ng-model="newUser.email"
+          ng-pattern="emailPattern"
+          ng-require="true"
+          >
+        </div>
+      </div>
+      <div class="form-group" ng-class="{ 'has-error':signupForm.password.$invalid && signupForm.password.$dirty }">
+        <label for="password" class="control-label col-md-2">Password</label>
+        <div class="col-md-10">
+          <input 
+          id="password"
+          type="password" 
+          name="password" 
+          class="form-control input-lg"
+          ng-model="newUser.password"
+          ng-required="true"
+          >
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-md-12">
+          <button
+          ng-click="submit()"
+          ng-disabled="signupForm.$invalid" 
+          class="btn btn-primary btn-lg center-block">Sign Up!</button>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+</div>

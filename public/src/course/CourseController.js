@@ -1,6 +1,6 @@
 // CourseController.js ================
 angular.module('LMSApp')
-.controller('CourseController', ['$scope', 'courseService', function($scope, courseService) {
+.controller('CourseController', ['$scope', 'courseService', 'userService', function($scope, courseService, userService) {
   $scope.newCourse = {
     title : '',
     department : '',
@@ -16,15 +16,21 @@ angular.module('LMSApp')
   // get all courses on load
   var init = function() {
     courseService.fetch( function(courses) {
-      // set courses
-      $scope.courses = courses;
-
-      // set instructors for new course
-      $scope.instructors = [
-        { id : 1, firstname : 'Yuraima', lastname : "Estevez" },
-        { id : 2, firstname : 'Eric', lastname : "Bishop" },
-        { id : 3, firstname : 'Fazil', lastname : "Haroon" },
-      ];
+      userService.getInstructors(function(instructors) {
+        $scope.instructors = instructors;
+        
+        // set courses
+        var allCourses = courses.map( function(course) {
+          for (var i = 0; i < instructors.length; i++) {
+            if (instructors[i]._id === course.instructorId) {
+              course.instructorName = instructors[i].lastname;
+            };
+          };
+          return course;
+        });
+        
+        $scope.courses = allCourses;
+      });
     });
   }
 
