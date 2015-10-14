@@ -1,0 +1,35 @@
+/* Overriding bootstrap classes */
+body {
+  padding-top: 100px;
+}
+
+.center {
+  float: none;
+}
+
+.form-group .btn {
+  margin-top: 15px;
+}
+
+.custom-label {
+  font-weight: 500;
+  margin-right: 5px;
+}
+
+.custom-label-location {
+  font-style: italic;
+}
+
+#map {
+  height: 500px;
+  background-color: #f9f9f9;
+}
+
+.map-container {
+  height: 100%;
+}
+
+.event-list {
+  height: 550px;
+  overflow: scroll;
+}

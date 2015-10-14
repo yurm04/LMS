@@ -7,18 +7,69 @@
 
   <!-- BOOTSTRAP & PAPER THEME -->
   <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap-paper.min.css">
-</head>
+  <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap-dashboard.min.css"><link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap-dashboard.min.css">
+  <link rel="stylesheet" href="css/app.css">
 <body>
+  <!-- TOP NAVIGATION -->
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">LMS</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="#">Dashboard</a></li>
+          <li><a href="#">Profile</a></li>
+        </ul>
 
-  <!-- MAIN CONTENT -->
-  <div ng-view></div>
+        <!-- USER AND COURSE LISTS -->
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="#">Students</a></li>
+          <li><a href="#">Courses</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
   
+  <!-- MAIN CONTAINER -->
+  <div class="container-fluid">
+    <div class="row">
+      <!-- SIDE BAR NAVIGATION -->
+      <div class="col-sm-3 col-md-2 sidebar">
+        <ul class="nav nav-sidebar">
+          <li class="active"><a href="#">Overview </a></li>
+          <li><a href="#">Announcements</a></li>
+          <li><a href="#">Course Content</a></li>
+          <li><a href="#">Quizes</a></li>
+          <li><a href="#">Assignments</a></li>
+        </ul>
+      </div>
+
+      <!-- APP VIEW -->
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ui-view>
+
+      </div>
+      <!-- END APP VIEW -->
+
+
+    </div>
+  </div>
   <!-- ANGULAR SCRIPTS -->
   <script src="lib/angular/angular.min.js"></script>
-  <!-- <script src="lib/angular-ui-router/angular-ui-router.min.js"></script> -->
-  <script src="lib/angular-route/angular-route.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.8/angular-ui-router.min.js"></script>
+  <!-- <script src="lib/angular-ui-router/release/angular-ui-router.min.js"></script> -->
+  <!-- <script src="lib/angular-route/angular-route.min.js"></script> -->
   <script src="app.js"></script>
+
+  <script src="lib/jquery/dist/jquery.min.js"></script>
+  <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
+
 
 </body>
 </html>

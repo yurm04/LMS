@@ -3,7 +3,7 @@ var Course = require('../models/Course'),
     mongoose = require('mongoose');
 
 var isValid = function (data) {
-  if ( !data.title ) {
+  if ( !data.title || !data.department || !data.number) {
     return false;
   } else {
     return true;
@@ -12,8 +12,21 @@ var isValid = function (data) {
 
 var setUpdateData = function (course, data, callback) {
   var newData = {};
+  
   if (data.title && data.title !== undefined) {
     newData.title = data.title;
+  }
+
+  if (data.department && data.department !== undefined) {
+    newData.department = data.department;
+  }
+
+  if (data.number && data.number !== undefined) {
+    newData.number = data.number;
+  }
+
+  if (data.instructor && data.instructor !== undefined) {
+    newData.instructor = data.instructor;
   }
 
   return callback(null, newData);
@@ -49,6 +62,7 @@ module.exports.getCourses = function ( req, res ) {
   });
 };
 
+// POST /course - create a new course
 module.exports.postCourse = function( req, res ) {
   var data = req.body.course;
   // check for all required data
@@ -65,6 +79,12 @@ module.exports.postCourse = function( req, res ) {
 
     var newCourse = new Course();
     newCourse.title = data.title;
+    newCourse.department = data.department;
+    newCourse.number = data.number;
+
+    if (data.instructor) {
+      newCourse.instructor = data.instructor;
+    };
 
     newCourse.save( function(err){
       if (err)
