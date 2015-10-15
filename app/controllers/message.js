@@ -1,5 +1,10 @@
 var Message = require('../models/Message');
 
+// check to make sure all
+var isValid = function(data) {
+  if ( !data.toId || !data.fromId || !data.message ) {};
+}
+
 module.exports.getMessages = function(req, res) {
   var id = req.params.uid;
 
