@@ -2,7 +2,7 @@ var Message = require('../models/Message');
 
 module.exports.getMessages = function(req, res) {
   var id = req.params.uid;
-
+  console.log(id);
   Message.find({ 'toId' :  id }, function(err, messages) {
     if (err)
       return res.json({ type : false, data : err });
@@ -16,7 +16,7 @@ module.exports.getMessages = function(req, res) {
   });
 };
 
-module.exports.getAllMessages = function(err, res) {
+module.exports.getAllMessages = function(req, res) {
   Message.find( function(err, messages) {
     if (err)
       return res.json({ type : false, data : err });
@@ -35,7 +35,9 @@ module.exports.postMessage = function(req, res) {
   var message = new Message({
     toName : data.toName,
     fromName : data.fromName,
-    message : data.message
+    message : data.message,
+    toId : data.toId,
+    fromId : data.fromId
   });
 
   message.save(function(err) {

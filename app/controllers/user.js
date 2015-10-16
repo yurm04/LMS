@@ -135,7 +135,7 @@ module.exports.putUser = function(req, res) {
     if (!foundUser)
       return res.json( { type : false, data : 'User not found' });
 
-    var data = req.body.user;
+    var data = req.body.data;
 
     setUpdateData(foundUser, data, function(err, newData) {
       if (err)
@@ -290,13 +290,15 @@ module.exports.login = function( req, res) {
       return res.json({ type : false, data : err });
     if (!user)
       return res.json({ type : false, data : invalid });
-    
+
+    var pw = "" + data.password;
+      
     bcrypt.compare(data.password, user.password, function(err, result) {
       if (err)
         return res.json({ type : false, data : err });
       console.log(result);
-      // if (result === false)
-      //   return res.json({ type : false, data : invalid });
+      if (result === false)
+        return res.json({ type : false, data : invalid });
 
       res.json({
         type : true,

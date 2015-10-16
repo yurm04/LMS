@@ -26,6 +26,7 @@ angular.module('LMSApp')
 
   var _login = function(user, cb) {
     var body = { data : user };
+    console.log(body);
     $http.post(loginUrl, body).then(
       function successCallback(res) {
         return cb(res.data.data);

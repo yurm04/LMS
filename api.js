@@ -68,11 +68,11 @@ router.route('/course/:id/students')
   .get( courseController.getStudents );         // gets students for the course of ID :id
 
 // MESSAGES ROUTES ==============================
-router.route('/messages/:id')
+router.route('/messages/:uid')
   .get( messageController.getMessages);
 
 router.route('/messages')
-  .get( messageController.getMessages)
+  .get( messageController.getAllMessages)
   .post( messageController.postMessage );
 
 

@@ -57,7 +57,7 @@ userSchema.pre('save', function(next, done) {
     next();
 
   // NO ERROR, generate salt
-  user.hashPassword( user.passowrd, function(err) {
+  user.hashPassword( user.password, function(err) {
     if (err)
       done(err);
 
