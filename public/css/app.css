@@ -1,7 +1,7 @@
 /* Overriding bootstrap classes */
-body {
+/*body {
   padding-top: 100px;
-}
+}*/
 
 .center {
   float: none;
@@ -32,4 +32,8 @@ body {
 .event-list {
   height: 550px;
   overflow: scroll;
+}
+
+.glyphicon-plus-sign {
+  color: #5cb85c;
 }

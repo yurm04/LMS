@@ -55,7 +55,7 @@ userSchema.pre('save', function(next, done) {
   // if password hasn't been modified, return callback
   if (!user.isModified('password'))
     next();
-
+  console.log(user.password);
   // NO ERROR, generate salt
   user.hashPassword( user.password, function(err) {
     if (err)

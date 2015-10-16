@@ -34,7 +34,7 @@ var setUpdateData = function (course, data, callback) {
   return callback(null, newData);
 };
 
-// GET /course/:id - get course of ID :id
+// GET /courses/:id - get course of ID :id
 module.exports.getCourse = function( req, res ) {
   var id = req.params.id;
 
@@ -49,7 +49,7 @@ module.exports.getCourse = function( req, res ) {
   });
 };
 
-// GET /course - get all courses, only used for registration purposes
+// GET /courses - get all courses, only used for registration purposes
 module.exports.getCourses = function ( req, res ) {
   Course.find( function(err, courses) {
     if (err)
@@ -64,7 +64,7 @@ module.exports.getCourses = function ( req, res ) {
   });
 };
 
-// POST /course - create a new course
+// POST /courses - create a new course
 module.exports.postCourse = function( req, res ) {
   var data = req.body.course;
   // check for all required data
@@ -100,7 +100,7 @@ module.exports.postCourse = function( req, res ) {
   });
 };
 
-// PUT /course/:id - update course data
+// PUT /courses/:id - update course data
 module.exports.putCourse = function( req, res ) {
   var id = mongoose.Types.ObjectId(req.params.id);
   var data = req.body.course;
@@ -144,7 +144,7 @@ module.exports.deleteCourse = function( req, res ) {
   });
 };
 
-// GET /course/:id/students - returns array of all students for course :id
+// GET /courses/:id/students - returns array of all students for course :id
 module.exports.getStudents = function( req, res ) {
   var id = mongoose.Types.ObjectId(req.params.id);
   console.log(id);
@@ -178,7 +178,7 @@ module.exports.getStudents = function( req, res ) {
   });
 };
 
-// GET /course/instructors - return array of instructors with their course data
+// GET /courses/instructors - return array of instructors with their course data
 module.exports.getInstructors = function( req, res ) {
 
 };

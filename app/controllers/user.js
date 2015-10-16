@@ -87,6 +87,7 @@ module.exports.getUsers = function(req, res) {
 
 // POST /user - create new user
 module.exports.postUser = function(req, res) {
+  console.log('it worked!');
   var data = req.body.data;
   // check to make sure all required values are set
   if ( !isValid(data) )
@@ -278,7 +279,7 @@ module.exports.getInstructors = function( req, res ) {
     });
 
   });
-}
+};
 
 module.exports.login = function( req, res) {
   // console.log(req);
@@ -306,4 +307,4 @@ module.exports.login = function( req, res) {
       });
     });
   });
-}
+};

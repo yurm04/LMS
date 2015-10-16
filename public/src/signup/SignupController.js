@@ -1,6 +1,6 @@
 // SignUpController.js ================
 angular.module('LMSApp')
-.controller('SignupController', ['$scope', 'userService', 'courseService', function($scope, userService, courseService) {
+.controller('SignupController', ['$scope', '$state', 'userService', 'courseService', function($scope, $state, userService, courseService) {
   // email pattern
   $scope.emailPattern = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
 
@@ -17,7 +17,7 @@ angular.module('LMSApp')
 
   $scope.submit = function() {
     userService.createUser($scope.newUser, function(data) {
-      console.log(data);
+      $state.go('courses');
     });
   }
 

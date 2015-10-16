@@ -1,7 +1,15 @@
 angular.module('LMSApp', ['ui.router'])
 
 // app constants ======================
-// .constant()
+.constant('RESOURCES', (function() {
+  var base_url = 'http://127.0.0.1:3000/api/';
+  return {
+    BASE : base_url,
+    USERS : base_url + 'users/',
+    COURSES : base_url + 'courses/',
+    LOGIN : base_url + 'login/'
+  };
+})())
 
 // config settings for router
 .config(function($stateProvider, $urlRouterProvider, $locationProvider) {

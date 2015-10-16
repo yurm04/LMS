@@ -1,5 +1,7 @@
+<!-- MY COURSES -->
+<h2 class="sub-header">My Courses</h2>
 <div class="table-responsive" ng-controller="CourseController as cc">
-  <table class="table table-striped">
+  <table class="table table-striped table-hover">
     <thead>
       <tr>
         <th>Dept.</th>
@@ -17,18 +19,31 @@
         <td>{{course.title}}</td>
         <td>{{course.instructorName}}</td>
       </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ALL COURSES -->
+<h2 class="sub-header">Available Courses</h2>
+<div class="table-responsive" ng-controller="CourseController as cc">
+  <table class="table table-striped table-hover">
+    <thead>
       <tr>
-        <td><input type="text" ng-model="newCourse.department"></td>
-        <td><input type="text" ng-model="newCourse.number"></td>
-        <td><input type="text" ng-model="newCourse.title"></td>
-        <td>
-          <select ng-model="newCourse.instructor" ng-options="instructor._id as instructor.lastname for instructor in instructors">
-          </select>
-        </td>
+        <th>Dept.</th>
+        <th>Number</th>
+        <th>Course Name</th>
+        <th>Instructor</th>
+        <th>Add</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="course in courses">
+        <td>{{course.department}}</td>
+        <td>{{course.number}}</td>
+        <td>{{course.title}}</td>
+        <td>{{course.instructorName}}</td>
+        <td><button class="glyphicon glyphicon-plus-sign" ng-click="addCourse(course._id)"></button></td>
       </tr>
     </tbody>
   </table>
-  <button
-    ng-click="addCourse()"
-    class="btn btn-primary btn-sm">Add Course</button>  
 </div>

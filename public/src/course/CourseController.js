@@ -1,6 +1,7 @@
 // CourseController.js ================
 angular.module('LMSApp')
 .controller('CourseController', ['$scope', 'courseService', 'userService', function($scope, courseService, userService) {
+  // var for new course object
   $scope.newCourse = {
     title : '',
     department : '',
@@ -9,8 +10,9 @@ angular.module('LMSApp')
   };
 
   // need to hook into api
-  $scope.addCourse = function() {
-    console.log($scope.newCourse);
+  $scope.addCourse = function(courseId) {
+    var selectedCourse = { user : userService.userId, course : courseId };
+    // courseService.addCourse(selectedCourse, function(data));
   }
 
   // get all courses on load

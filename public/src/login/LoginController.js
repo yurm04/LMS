@@ -10,7 +10,6 @@ angular.module('LMSApp')
     userService.login($scope.user, function(data) {
       console.log(data);
       if (data.type === true) {
-        console.log(data);
         userService.setUser = data.user;
         $state.go('courses');
       };
