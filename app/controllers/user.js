@@ -282,7 +282,6 @@ module.exports.getInstructors = function( req, res ) {
 };
 
 module.exports.login = function( req, res) {
-  // console.log(req);
   var data = req.body.data;
   var invalid = 'Invalid email/password';
 
@@ -292,12 +291,10 @@ module.exports.login = function( req, res) {
     if (!user)
       return res.json({ type : false, data : invalid });
 
-    var pw = "" + data.password;
-      
     bcrypt.compare(data.password, user.password, function(err, result) {
       if (err)
         return res.json({ type : false, data : err });
-      console.log(result);
+      
       if (result === false)
         return res.json({ type : false, data : invalid });
 

@@ -1,0 +1,63 @@
+<h2 class="sub-header">Create New Course</h2>
+<div class="well well-lg col-md-8 center center-block">
+  <form name="courseForm" class="form-horizontal" ng-controller="CourseController" novalidate>
+    <fieldset>
+      <div class="form-group" ng-class="{ 'has-error':courseForm.department.$invalid && courseForm.department.$dirty}">
+        <label for="department" class="control-label col-md-2">Department</label>
+        <div class="col-md-10">
+          <input
+          id="department" 
+          type="text" 
+          name="department" 
+          class="form-control input-lg" 
+          ng-model="newCourse.department"
+          ng-require="true"
+          >
+        </div>
+      </div>
+      <div class="form-group" ng-class="{ 'has-error':courseForm.number.$invalid && courseForm.number.$dirty}">
+        <label for="number" class="control-label col-md-2">Course Number</label>
+        <div class="col-md-10">
+          <input
+          id="number" 
+          type="test" 
+          name="number" 
+          class="form-control input-lg" 
+          ng-model="newCourse.number"
+          ng-require="true"
+          >
+        </div>
+      </div>
+      <div class="form-group" ng-class="{ 'has-error':courseForm.title.$invalid && courseForm.title.$dirty}">
+        <label for="title" class="control-label col-md-2">Course Name</label>
+        <div class="col-md-10">
+          <input
+          id="title" 
+          type="text" 
+          name="title" 
+          class="form-control input-lg" 
+          ng-model="newCourse.title"
+          ng-require="true"
+          >
+        </div>
+      </div>
+      <div class="form-group" ng-class="{ 'has-error':courseForm.inputPassword.$invalid && courseForm.inputPassword.$dirty }">
+        <label for="inputPassword" class="control-label col-md-2">Instructor</label>
+        <div class="col-md-10">
+          <select name="instructor" id="instructor" ng-model="newCourse.instructorId" ng-options"instructor.id as instructor.lastname for instructor in instructors"></select>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-md-12">
+          <button
+          ng-click="login()"
+          ng-disabled="courseForm.$invalid" 
+          class="btn btn-primary btn-lg center-block">Let's Go</button>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+</div>
+<div class="col-md-12">
+  <button class="btn btn-success btn-sm center-block" ui-sref="signup">Sign Up</button>
+</div>

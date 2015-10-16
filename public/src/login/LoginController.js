@@ -12,9 +12,9 @@ angular.module('LMSApp')
       if (data.type === true) {
         userService.setUser = data.user;
         $state.go('courses');
-      };
+      }
     });
-  }
+  };
 
   // Validation -------------
   $scope.validate = function() {

@@ -66,7 +66,7 @@ module.exports.getCourses = function ( req, res ) {
 
 // POST /courses - create a new course
 module.exports.postCourse = function( req, res ) {
-  var data = req.body.course;
+  var data = req.body.data;
   // check for all required data
   if (!isValid(data))
     return res.json({ type : false, data : 'Missing required course information' });

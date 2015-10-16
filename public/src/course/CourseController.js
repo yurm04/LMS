@@ -13,12 +13,18 @@ angular.module('LMSApp')
   $scope.addCourse = function(courseId) {
     var selectedCourse = { user : userService.userId, course : courseId };
     // courseService.addCourse(selectedCourse, function(data));
-  }
+  };
+
+  $scope.createCourse = function() {
+    courseService.createCourse($scope.newCourse, function(data) {
+      
+    });
+  };
 
   // get all courses on load
   var init = function() {
     courseService.fetch( function(courses) {
-      userService.getInstructors(function(instructors) {
+      courseService.getInstructors(function(instructors) {
         $scope.instructors = instructors;
         
         // set courses
@@ -26,15 +32,15 @@ angular.module('LMSApp')
           for (var i = 0; i < instructors.length; i++) {
             if (instructors[i]._id === course.instructorId) {
               course.instructorName = instructors[i].lastname;
-            };
-          };
+            }
+          }
           return course;
         });
         
         $scope.courses = allCourses;
       });
     });
-  }
+  };
 
   init();
 }]);

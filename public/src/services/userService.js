@@ -17,7 +17,7 @@ angular.module('LMSApp')
         return cb(res.data.data);
       },
       function errorCallback(res) {
-        // console.log(res.data.data);
+        console.log(res.data.data);
       }
     );
   };
@@ -28,7 +28,7 @@ angular.module('LMSApp')
     console.log(body);
     $http.post(RESOURCES.LOGIN, body).then(
       function successCallback(res) {
-        return cb(res.data.data);
+        return cb(res.data);
       },
       function errorCallback(res) {
         console.log(res);
@@ -48,18 +48,6 @@ angular.module('LMSApp')
     return currentUser;
   };
 
-  // Get all instructors
-  var _getInstructors = function(cb) {
-    $http.get(instructorUrl).then(
-      function successCallback(res) {
-        return cb(res.data.data);
-      },
-      function errorCallback(res) {
-        console.log(res);
-      }
-    );
-  };
-
   // logout the current user, unset any user data
   var _logOut = function() {
     currentUser = '';
@@ -68,7 +56,6 @@ angular.module('LMSApp')
   };
 
   return {
-    getInstructors : _getInstructors,
     createUser : _createUser,
     setCurrentUser : _setUser,
     login : _login,

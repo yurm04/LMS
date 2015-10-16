@@ -21,10 +21,11 @@ userSchema.methods.hashPassword = function(pwd, callback) {
   bcrypt.genSalt(5, function(err, salt) {
     if (err)
       return callback(err);
-
+    console.log(pwd);
     // hash password and set
     bcrypt.hash(pwd, salt, null, function(err, hash) {
-      user.password = hash;
+      console.log(hash);
+      // user.password = hash;
       // all good, user saved
       callback(null, hash);
     });
@@ -55,12 +56,14 @@ userSchema.pre('save', function(next, done) {
   // if password hasn't been modified, return callback
   if (!user.isModified('password'))
     next();
-  console.log(user.password);
+  console.log('user password ' + user.password);
   // NO ERROR, generate salt
-  user.hashPassword( user.password, function(err) {
+  user.hashPassword( user.password, function(err, hash) {
     if (err)
       done(err);
-
+    console.log(hash);
+    console.log(user);
+    user.password = hash;
     next();
   });
 

@@ -20,7 +20,21 @@ angular.module('LMSApp')
     );
   };
 
+
+  // Get all instructors
+  var _getInstructors = function(cb) {
+    $http.get(RESOURCES.INSTRUCTORS).then(
+      function successCallback(res) {
+        return cb(res.data.data);
+      },
+      function errorCallback(res) {
+        console.log(res);
+      }
+    );
+  };
+
   return {
-    fetch : getAllCourses
-  }
+    fetch : getAllCourses,
+    getInstructors : _getInstructors
+  };
 }]);
