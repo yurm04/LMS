@@ -33,8 +33,39 @@ angular.module('LMSApp')
     );
   };
 
+  var _getUserCourses = function(userId, cb) {
+    var url = RESOURCES.USERS + userId + 'courses/';
+    console.log(url);
+    $http.get(url).then(
+      function successCallback(res) {
+        return cb(res.data.data);
+      },
+
+      function errorCallback(res) {
+        console.log(res.data.data);
+      }
+    );
+  };
+
+  var _createCourse = function(course, cb) {
+    $http.post(RESOURCES.COURSES, course).then(
+      // success
+      function success(res) {
+        cb(res.data);
+      },
+
+      // error
+      function error(res) {
+        
+      }
+    );
+  };
+
+
   return {
     fetch : getAllCourses,
-    getInstructors : _getInstructors
+    getInstructors : _getInstructors,
+    createCourse : _createCourse,
+    getUserCourses : _getUserCourses
   };
 }]);

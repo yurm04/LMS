@@ -1,0 +1,80 @@
+<div class="well well-lg col-md-8 center center-block">
+  <form name="newAssignmentForm" class="form-horizontal" ng-controller="AssignmentController" novalidate>
+    <fieldset>
+      <div class="form-group" ng-class="{ 'has-error':newAssignmentForm.title.$invalid && newAssignmentForm.title.$dirty}">
+        <label for="title" class="control-label col-md-2">First Name:</label>
+        <div class="col-md-10">
+          <input
+          id="title" 
+          type="text" 
+          name="title" 
+          class="form-control input-lg" 
+          ng-model="newAssignment.title"
+          ng-required="true"
+          >
+        </div>
+      </div>
+      <div class="form-group" ng-class="{ 'has-error':newAssignmentForm.description.$invalid && newAssignmentForm.description.$dirty}">
+        <label for="description" class="control-label col-md-2">Description</label>
+        <div class="col-md-10">
+          <input
+          id="description" 
+          type="text" 
+          name="description" 
+          class="form-control input-lg" 
+          ng-model="newAssignment.description"
+          ng-required="true"
+          >
+        </div>
+      </div>
+
+      <div class="form-group" ng-class="{ 'has-error':newAssignmentForm.role.$invalid && newAssignmentForm.role.$dirty}">
+        <label for="role" class="control-label col-md-2">Role: </label>
+        <div class="col-md-10">
+          <select id="role" name="role" class="form-control input-lg" ng-model="newAssignment.role" ng-options="role for role in roles" ng-required="true">
+          </select>
+          
+          
+        </div>
+      </div>
+
+      <div class="form-group" ng-class="{ 'has-error':newAssignmentForm.email.$invalid && newAssignmentForm.email.$dirty}">
+        <label for="email" class="control-label col-md-2">Email</label>
+        <div class="col-md-10">
+          <input
+          id="email" 
+          type="email" 
+          name="email" 
+          class="form-control input-lg" 
+          placeholder="you@email.com"
+          ng-model="newAssignment.email"
+          ng-pattern="emailPattern"
+          ng-require="true"
+          >
+        </div>
+      </div>
+      <div class="form-group" ng-class="{ 'has-error':newAssignmentForm.password.$invalid && newAssignmentForm.password.$dirty }">
+        <label for="password" class="control-label col-md-2">Password</label>
+        <div class="col-md-10">
+          <input 
+          id="password"
+          type="password" 
+          name="password" 
+          class="form-control input-lg"
+          ng-model="newAssignment.password"
+          ng-required="true"
+          >
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-md-12">
+          <button
+          ng-click="submit()"
+          ng-disabled="newAssignmentForm.$invalid" 
+          class="btn btn-primary btn-lg center-block">Sign Up!</button>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+</div>

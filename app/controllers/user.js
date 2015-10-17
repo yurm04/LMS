@@ -4,6 +4,7 @@ var User = require('../models/User'),
     UserCourse = require('../models/UserCourse'),
     mongoose = require('mongoose'),
     bcrypt = require('bcrypt-nodejs'),
+    Log = require('../models/Log'),
     _ = require('underscore');
 
 var setUpdateData = function(user, data, callback) {
@@ -115,6 +116,17 @@ module.exports.postUser = function(req, res) {
       if (err)
         return res.json( { type : false, data : err });
 
+      // log creating new user
+      var log = new Log({
+        title : 'New User',
+        description : 'Created new user ' + newUser.email,
+      });
+
+      log.save( function(err) {
+        if (err)
+          console.log('Could not log new user creation ' + newUser.email);
+      });
+
       // "Good news, Everyone!" - Professor Farnsworth
       res.json({
         type : true,
@@ -127,7 +139,7 @@ module.exports.postUser = function(req, res) {
 
 // PUT /user/:id - update user of ID :id
 module.exports.putUser = function(req, res) {
-  var id = mongoose.Types.ObjectId(req.params.id);
+  var id = req.params.id;
 
   User.findOne( { "_id" : id }, function(err, foundUser) {
     if (err)
@@ -150,6 +162,17 @@ module.exports.putUser = function(req, res) {
           if (err)
             return res.json( { type : false, data : err });
 
+          // log update user
+          var log = new Log({
+            title : 'Update User',
+            description : 'Made changes to user data for ' + updatedUser.email,
+          });
+
+          log.save( function(err) {
+            if (err)
+              console.log('Could not log changes to user ' + updatedUser.email);
+          });
+
           res.json({
             type : true,
             data : updatedUser
@@ -169,6 +192,17 @@ module.exports.deleteUser = function(req, res) {
   User.findOneAndRemove( { "_id" : id }, function(err) {
     if (err)
       return res.json( { type : false, data : err });
+
+    // log delete user
+    var log = new Log({
+      title : 'Delete User',
+      description : 'Delete user ' + id,
+    });
+
+    log.save( function(err) {
+      if (err)
+        console.log('Could not log deleted user ' + id);
+    });
 
     res.json({
       type : true
@@ -233,6 +267,18 @@ module.exports.postCourse = function( req, res ) {
         if (err)
           return res.json( { type : false, data : err });
 
+        // log course registration
+        var log = new Log({
+          title : 'User registration',
+          description : 'User ' + uid + 'registered for course  ' + foundCourse.title,
+          courseId : foundCourse._id
+        });
+
+        log.save( function(err) {
+          if (err)
+            console.log('Could not log user registration ' + uid + ' for course ' + foundCourse.title);
+        });
+
         res.json({
           type : true,
           data : userCourse
@@ -257,6 +303,18 @@ module.exports.deleteCourse = function( req, res ) {
     UserCourse.findOneAndRemove({ "courseId" : cid, "userId" : uid }, function(err) {
       if (err)
         return res.json({ type : false, data : err });
+
+      // log course drop
+        var log = new Log({
+          title : 'Drop course',
+          description : 'User ' + uid + 'dropped course  ' + cid,
+          courseId : cid
+        });
+
+        log.save( function(err) {
+          if (err)
+            console.log('Could not log user registration ' + uid + ' for course ' + foundCourse.title);
+        });
 
       res.json({
         type : true,
@@ -297,6 +355,17 @@ module.exports.login = function( req, res) {
       
       if (result === false)
         return res.json({ type : false, data : invalid });
+
+      // log user login
+      var log = new Log({
+        title : 'User login',
+        description : 'User ' + user.email + ' logged in'
+      });
+
+      log.save( function(err) {
+        if (err)
+          console.log('Could not log user login ' + user.email);
+      });
 
       res.json({
         type : true,

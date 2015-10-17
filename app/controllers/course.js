@@ -2,6 +2,7 @@
 var Course = require('../models/Course'),
     UserCourse = require('../models/UserCourse'),
     User = require('../models/User'),
+    Log = require('../models/Log'),
     mongoose = require('mongoose');
 
 var isValid = function (data) {
@@ -66,7 +67,8 @@ module.exports.getCourses = function ( req, res ) {
 
 // POST /courses - create a new course
 module.exports.postCourse = function( req, res ) {
-  var data = req.body.data;
+  var data = req.body;
+  console.log(req.body);
   // check for all required data
   if (!isValid(data))
     return res.json({ type : false, data : 'Missing required course information' });
@@ -86,11 +88,22 @@ module.exports.postCourse = function( req, res ) {
 
     if (data.instructorId) {
       newCourse.instructorId = data.instructorId;
-    };
+    }
 
     newCourse.save( function(err){
       if (err)
         return res.json({ type : false, data : err });
+
+      // log new course
+      var log = new Log({
+        title : 'Course creation',
+        description : 'New course created ' + newCourse.title
+      });
+
+      log.save( function(err) {
+        if (err)
+          console.log('Could not log new course creation ' + newCourse.title);
+      });
 
       res.json({
         type : true,
@@ -119,6 +132,18 @@ module.exports.putCourse = function( req, res ) {
           if (err)
             return res.json({ type : false, data : err });
 
+          // log course update
+          var log = new Log({
+            title : 'Course Update',
+            description : 'Made changes to course ' + foundCourse.title,
+            course : foundCourse._id
+          });
+
+          log.save( function(err) {
+            if (err)
+              console.log('Could not log course update ' + foundCourse.title);
+          });
+
           res.json({
             type : true,
             data : updatedCourse
@@ -129,6 +154,7 @@ module.exports.putCourse = function( req, res ) {
   });
 };
 
+// DELETE /course/:id - deletes course of ID :id
 module.exports.deleteCourse = function( req, res ) {
   var id = mongoose.Types.ObjectId(req.params.id);
   if ( !id || id === null || id === undefined )
@@ -138,6 +164,17 @@ module.exports.deleteCourse = function( req, res ) {
     if (err)
       return res.json({ type : false, data : err });
     
+    // log user login
+    var log = new Log({
+      title : 'Course delete',
+      description : 'Course ' + id + ' was deleted'
+    });
+
+    log.save( function(err) {
+      if (err)
+        console.log('Could not course delete ' + id);
+    });
+
     res.json({
       type : true
     });
@@ -176,9 +213,4 @@ module.exports.getStudents = function( req, res ) {
       });
     });
   });
-};
-
-// GET /courses/instructors - return array of instructors with their course data
-module.exports.getInstructors = function( req, res ) {
-
 };

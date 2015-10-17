@@ -8,7 +8,7 @@ angular.module('LMSApp', ['ui.router'])
     USERS : base_url + 'users/',
     COURSES : base_url + 'courses/',
     LOGIN : base_url + 'login/',
-    INSTRUCTORS : base_url + 'instructors/'
+    INSTRUCTORS : base_url + 'instructors/',
   };
 })())
 
@@ -62,7 +62,15 @@ angular.module('LMSApp', ['ui.router'])
       .state('createCourse', {
         url : '/createCourse',
         templateUrl: 'src/course/createCourse.html'
+      })
+
+      // content state ================
+      .state('content', {
+        url : '/content',
+        templateUrl: 'src/course/content.html'
       });
+
+
 
   $locationProvider.html5Mode(true);
       

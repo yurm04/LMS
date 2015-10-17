@@ -17,8 +17,10 @@ angular.module('LMSApp')
 
   $scope.submit = function() {
     userService.createUser($scope.newUser, function(data) {
-      $state.go('courses');
+      if (data.type === true) {
+        $state.go('courses');
+      }
     });
-  }
+  };
 
 }]);

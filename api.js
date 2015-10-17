@@ -1,14 +1,17 @@
 // api.js =======================================
-var express        = require('express'),
-    router         = express.Router(),
-    bodyParser     = require('body-parser'),
-    mongoose       = require('mongoose'),
-    dbconfig       = require('./config/config').db,
-    User           = require('./app/models/User'),
-    userController = require('./app/controllers/user'),
-    courseController = require('./app/controllers/course'),
-    loginController = require('./app/controllers/login'),
-    messageController = require('./app/controllers/message');
+var express           = require('express'),
+    router            = express.Router(),
+    bodyParser        = require('body-parser'),
+    mongoose          = require('mongoose'),
+    dbconfig          = require('./config/config').db,
+    User              = require('./app/models/User'),
+    userController    = require('./app/controllers/user'),
+    courseController  = require('./app/controllers/course'),
+    messageController = require('./app/controllers/message'),
+    logController     = require('./app/controllers/log'),
+    assignmentsController = require('./app/controllers/assignment'),
+    multer  = require('multer'),
+    upload  = multer({ dest: '../tmp/'});
 
 // connect to DB
 mongoose.connect(dbconfig.url);
@@ -75,6 +78,17 @@ router.route('/messages')
   .get( messageController.getAllMessages)
   .post( messageController.postMessage );
 
+// ACTIVITY LOG ROUTERS =========================
+router.route('/logs')
+  .get( logController.getLogs );           // gets all activity logs
+
+router.route('logs/course/:id')
+  .get( logController.getCourseLogs );     // get all logs for course of :id
+
+// ASSIGNMENTS ROUTERS ==========================
+router.route('/assignments')
+  .post( assignmentsController.postAssignment ) // file upload
+  .get( assignmentsController.getAssignments );
 
 
 // DON'T FORGET TO EXPORT ROUTER YOU BUTT!

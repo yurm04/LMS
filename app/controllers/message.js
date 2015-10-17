@@ -1,9 +1,10 @@
-var Message = require('../models/Message');
+var Message = require('../models/Message'),
+    Log = require('../models/Log');
 
 // check to make sure all
 var isValid = function(data) {
-  if ( !data.toId || !data.fromId || !data.message ) {};
-}
+  if ( !data.toId || !data.fromId || !data.message ) {}
+};
 
 module.exports.getMessages = function(req, res) {
   var id = req.params.uid;
@@ -31,9 +32,9 @@ module.exports.getAllMessages = function(req, res) {
     res.json({
       type : true,
       data : messages
-    })
+    });
   });
-}
+};
 
 module.exports.postMessage = function(req, res) {
   var data = req.body.data;
@@ -49,10 +50,20 @@ module.exports.postMessage = function(req, res) {
     if (err)
       return res.json({ type : false, data : err });
 
+    // log message sent
+    var log = new Log({
+      title : 'Message created',
+      description : 'Message sent from ' + message.fromName + ' to ' + message.toName
+    });
+
+    log.save( function(err) {
+      if (err)
+        console.log('Could not log new message');
+    });
+
     res.json({
       type : true,
       data : message
     });
   });
-
-}
+};

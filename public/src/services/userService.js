@@ -14,7 +14,7 @@ angular.module('LMSApp')
       function successCallback(res) {
         currentUser = res.data.data;
         isLoggedIn = true;
-        return cb(res.data.data);
+        return cb(res.data);
       },
       function errorCallback(res) {
         console.log(res.data.data);
@@ -39,6 +39,7 @@ angular.module('LMSApp')
   // LoginController, set a new user
   var _setUser = function(user) {
     currentUser = user;
+    userId = user._id;
     isLoggedIn = true;
     role = user.role;
   };
@@ -48,9 +49,14 @@ angular.module('LMSApp')
     return currentUser;
   };
 
+  var _getUserId = function() {
+    return userId;
+  };
+
   // logout the current user, unset any user data
   var _logOut = function() {
     currentUser = '';
+    userId = '';
     isLoggedIn = false;
     role = '';
   };
@@ -61,6 +67,7 @@ angular.module('LMSApp')
     login : _login,
     logout : _logOut,
     role : role,
-    getCurrentUser : _getUser
+    getCurrentUser : _getUser,
+    getUserId : _getUserId
   };
 }]);
